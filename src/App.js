@@ -24,15 +24,38 @@ const data = [
 ];
 
 class App extends Component {
+
+  state = {
+    teams: data
+  };
+
   renderTeams() {
-    return data.map((result, idx) => (
-      <tr key={idx}>
-        <td>{result.name}</td>
-        <td>{result.F}</td>
-        <td>{result.A}</td>
-        <td>{result.Pts}</td>
-      </tr>
-    ));
+    const smallestGoalDifferenceTeamIndex = this.getSmallestGoalDifference();
+    
+    return data.map((result, idx) => {
+      const style = smallestGoalDifferenceTeamIndex === idx ? {background: 'red'} : {};
+      return (
+        <tr key={idx} style={style}>
+          <td>{result.name}</td>
+          <td>{result.F}</td>
+          <td>{result.A}</td>
+          <td>{result.Pts}</td>
+        </tr>)
+    });
+  }
+
+  getSmallestGoalDifference = () => {
+    const {teams} = this.state;
+
+    var smallestDiffTeamIndex = 0;
+
+    teams.forEach((team, idx) => {
+      if(Math.abs(team.F - team.A) < Math.abs(teams[smallestDiffTeamIndex].F - teams[smallestDiffTeamIndex].A)) {
+        smallestDiffTeamIndex = idx
+      }
+    })
+
+    return smallestDiffTeamIndex;
   }
 
   render() {
